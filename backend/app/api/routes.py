@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastapi import APIRouter
 
 from app.agent.core import AgentCore
@@ -18,7 +20,7 @@ router = APIRouter(prefix="/api")
 sandbox = WorkspaceSandbox("./workspace")
 filesystem = FileSystemTool(sandbox)
 shell_tool = ShellTool()
-git_tool = GitTool(".")
+git_tool = GitTool(str(Path(__file__).resolve().parents[3]))
 browser_tool = BrowserTool()
 
 mcp_client = MCPClient()
