@@ -19,8 +19,8 @@ ai-ide/
 │   │   ├── memory/              # episodic/semantic/personality (Chroma)
 │   │   ├── observability/       # logger + trace collector
 │   │   ├── skills/              # skill loader/matcher/executor/DAG
-│   │   └── tools/               # filesystem/git/shell/browser/sandbox
-│   ├── examples/
+│   │   ├── tools/               # filesystem/git/shell/browser/sandbox
+│   │   └── examples/            # runnable execution demos
 │   └── skills/
 │       └── build_api/
 └── README.md
@@ -134,3 +134,16 @@ python -m app.examples.login_demo
 - 增加 Multi-Agent 并发调度器（队列 + 依赖图）。
 - 接入真实 PR 平台（GitHub/GitLab API）。
 - 引入事件总线（Kafka/NATS）实现跨进程工具调用。
+
+
+## 8. 本地验证清单
+
+建议按以下顺序验证可运行性：
+
+```bash
+python -m compileall backend/app
+cd backend && pip install -r requirements.txt && uvicorn app.main:app --port 8000
+cd frontend && npm install && npm run dev
+```
+
+如果你的环境受代理/防火墙限制，依赖安装可能失败（`pip`/`npm` 403），需切换可访问镜像源后再执行。
