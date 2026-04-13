@@ -17,19 +17,28 @@ from app.tools.shell_tool import ShellTool
 
 router = APIRouter(prefix="/api")
 
-sandbox = WorkspaceSandbox("./workspace")
+BACKEND_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = BACKEND_ROOT.parent
+SKILLS_DIR = BACKEND_ROOT / "skills"
+
+sandbox = WorkspaceSandbox(str(BACKEND_ROOT / "workspace"))
 filesystem = FileSystemTool(sandbox)
 shell_tool = ShellTool()
-git_tool = GitTool(str(Path(__file__).resolve().parents[3]))
 browser_tool = BrowserTool()
+
+
+def commit_with_repo_autodiscovery(message: str) -> str:
+    # 避免 import 阶段绑定路径导致在不同工作目录下崩溃。
+    return GitTool(str(REPO_ROOT)).commit(message)
+
 
 mcp_client = MCPClient()
 mcp_client.register_tool("filesystem.write", filesystem.write, lambda: ToolSchema(name="filesystem.write", description="Write file"))
 mcp_client.register_tool("shell.run", shell_tool.run, lambda: ToolSchema(name="shell.run", description="Run shell command"))
-mcp_client.register_tool("git.commit", git_tool.commit, lambda: ToolSchema(name="git.commit", description="Commit repository"))
+mcp_client.register_tool("git.commit", commit_with_repo_autodiscovery, lambda: ToolSchema(name="git.commit", description="Commit repository"))
 mcp_client.register_tool("browser.fetch", browser_tool.fetch, lambda: ToolSchema(name="browser.fetch", description="Fetch webpage"))
 
-core = AgentCore(skill_loader=SkillLoader("backend/skills"), mcp_client=mcp_client, memory_store=MemoryStore())
+core = AgentCore(skill_loader=SkillLoader(str(SKILLS_DIR)), mcp_client=mcp_client, memory_store=MemoryStore())
 
 
 @router.post("/run", response_model=TaskResponse)

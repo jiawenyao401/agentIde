@@ -1,5 +1,7 @@
 """完整执行示例：用户输入“帮我做一个用户登录系统”"""
 
+from pathlib import Path
+
 from app.agent.core import AgentCore
 from app.memory.store import MemoryStore
 from app.mcp.client import MCPClient, ToolSchema
@@ -10,18 +12,23 @@ from app.tools.sandbox import WorkspaceSandbox
 from app.tools.shell_tool import ShellTool
 
 
+BACKEND_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = BACKEND_ROOT.parent
+SKILLS_DIR = BACKEND_ROOT / "skills"
+
+
 def build_core() -> AgentCore:
-    sandbox = WorkspaceSandbox("./workspace")
+    sandbox = WorkspaceSandbox(str(BACKEND_ROOT / "workspace"))
     fs = FileSystemTool(sandbox)
     shell = ShellTool()
-    git = GitTool(".")
+    git = GitTool(str(REPO_ROOT))
 
     mcp = MCPClient()
     mcp.register_tool("filesystem.write", fs.write, lambda: ToolSchema(name="filesystem.write", description="Write file"))
     mcp.register_tool("shell.run", shell.run, lambda: ToolSchema(name="shell.run", description="Run shell command"))
     mcp.register_tool("git.commit", git.commit, lambda: ToolSchema(name="git.commit", description="Commit code"))
 
-    return AgentCore(skill_loader=SkillLoader("backend/skills"), mcp_client=mcp, memory_store=MemoryStore())
+    return AgentCore(skill_loader=SkillLoader(str(SKILLS_DIR)), mcp_client=mcp, memory_store=MemoryStore())
 
 
 def main() -> None:
