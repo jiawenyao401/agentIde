@@ -1,0 +1,7 @@
+{
+  "tools": [
+    "filesystem.write",
+    "shell.run",
+    "git.commit"
+  ]
+}

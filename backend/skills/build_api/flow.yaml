@@ -1,0 +1,20 @@
+nodes:
+  - id: analyze
+    label: 分析需求
+  - id: schema
+    label: 设计数据库
+  - id: codegen
+    label: 生成API代码
+  - id: tests
+    label: 编写测试
+  - id: pr
+    label: 提交PR
+edges:
+  - from: analyze
+    to: schema
+  - from: schema
+    to: codegen
+  - from: codegen
+    to: tests
+  - from: tests
+    to: pr
