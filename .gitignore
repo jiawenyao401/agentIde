@@ -205,3 +205,7 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Keep frontend source lib folder
+!frontend/lib/
+!frontend/lib/**
