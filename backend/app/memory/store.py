@@ -22,8 +22,9 @@ class MemoryStore:
     def add(self, memory_type: MemoryType, content: str, metadata: dict | None = None) -> MemoryItem:
         memory_id = str(uuid.uuid4())
         collection = self.collections[memory_type]
-        collection.add(ids=[memory_id], documents=[content], metadatas=[metadata or {}])
-        return MemoryItem(memory_id=memory_id, memory_type=memory_type, content=content, metadata=metadata or {})
+        safe_metadata = self._safe_metadata(memory_type, metadata)
+        collection.add(ids=[memory_id], documents=[content], metadatas=[safe_metadata])
+        return MemoryItem(memory_id=memory_id, memory_type=memory_type, content=content, metadata=safe_metadata)
 
     def search(self, memory_type: MemoryType, query: str, n_results: int = 3) -> list[MemoryItem]:
         collection = self.collections[memory_type]
@@ -35,3 +36,10 @@ class MemoryStore:
             MemoryItem(memory_id=memory_id, memory_type=memory_type, content=doc, metadata=meta or {})
             for memory_id, doc, meta in zip(ids, docs, metas)
         ]
+
+    @staticmethod
+    def _safe_metadata(memory_type: MemoryType, metadata: dict | None) -> dict:
+        """Chroma requires metadata to be a non-empty dict."""
+        if metadata:
+            return metadata
+        return {"memory_type": memory_type.value, "source": "agent-core"}
