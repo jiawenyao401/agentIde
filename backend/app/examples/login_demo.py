@@ -1,6 +1,17 @@
-"""完整执行示例：用户输入“帮我做一个用户登录系统”"""
+"""完整执行示例：用户输入“帮我做一个用户登录系统”。
+
+支持两种启动方式：
+1) 推荐：`python -m app.examples.login_demo`（在 backend 目录执行）
+2) 直接执行文件：`python backend/app/examples/login_demo.py`
+"""
 
 from pathlib import Path
+import sys
+
+# 兼容直接执行脚本时的 import 路径，避免命中 site-packages 里的同名 `app` 包。
+BACKEND_ROOT = Path(__file__).resolve().parents[2]
+if str(BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(BACKEND_ROOT))
 
 from app.agent.core import AgentCore
 from app.memory.store import MemoryStore
@@ -12,7 +23,6 @@ from app.tools.sandbox import WorkspaceSandbox
 from app.tools.shell_tool import ShellTool
 
 
-BACKEND_ROOT = Path(__file__).resolve().parents[2]
 REPO_ROOT = BACKEND_ROOT.parent
 SKILLS_DIR = BACKEND_ROOT / "skills"
 
