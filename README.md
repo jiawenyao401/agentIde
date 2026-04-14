@@ -152,7 +152,7 @@ cd frontend && npm install && npm run dev
 ## 9. 前端安全依赖说明
 
 - `next` 已固定到 `15.5.15`（修复 `npm audit` 报告中的多个 Next.js 高危问题）。
-- 使用 `overrides` 将 `dompurify` 固定到 `3.3.2`，规避 `monaco-editor` 传递依赖中的已知漏洞。
+- 为消除 `dompurify` 传递依赖漏洞，当前默认前端移除了 `@monaco-editor/react`，改为内置安全编辑器回退（`textarea`）。
 
 升级后请在 `frontend/` 目录执行：
 

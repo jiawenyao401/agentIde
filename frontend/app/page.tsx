@@ -1,8 +1,9 @@
 "use client";
 
-import Editor from "@monaco-editor/react";
 import { Panel } from "@/components/Panel";
 import { toolTrace } from "@/lib/mockData";
+
+const starterCode = `export const hello = () => "Agent Native IDE";`;
 
 export default function HomePage() {
   return (
@@ -16,12 +17,20 @@ export default function HomePage() {
           alignItems: "start"
         }}
       >
-        <Panel title="Monaco Editor">
-          <Editor
-            height="60vh"
-            defaultLanguage="typescript"
-            defaultValue={`export const hello = () => "Agent Native IDE";`}
-            theme="vs-dark"
+        <Panel title="Code Editor (secure fallback)">
+          <textarea
+            defaultValue={starterCode}
+            style={{
+              width: "100%",
+              minHeight: "60vh",
+              background: "#111827",
+              color: "#e5e7eb",
+              border: "1px solid #374151",
+              borderRadius: 8,
+              padding: 12,
+              fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+              fontSize: 14
+            }}
           />
         </Panel>
 
@@ -44,7 +53,9 @@ export default function HomePage() {
           <Panel title="Tool Trace">
             <ul>
               {toolTrace.map((item) => (
-                <li key={`${item.step}-${item.tool}`}>{item.step} -> {item.tool} ({item.status})</li>
+                <li key={`${item.step}-${item.tool}`}>
+                  {item.step} -&gt; {item.tool} ({item.status})
+                </li>
               ))}
             </ul>
           </Panel>
