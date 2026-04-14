@@ -77,7 +77,7 @@ npm run dev
 ### Skill System
 
 - `SkillLoader`：动态扫描 `backend/skills/*`
-- `SkillMatcher`：轻量语义匹配（可替换 embedding）
+- `SkillMatcher`：轻量语义匹配（支持中文触发词/引号短语，可替换 embedding）
 - `SkillExecutor`：读取 flow.yaml 并执行 DAG 拓扑序
 - `SkillGraph`：基于 networkx 校验 DAG
 
