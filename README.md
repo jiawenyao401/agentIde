@@ -147,3 +147,16 @@ cd frontend && npm install && npm run dev
 ```
 
 如果你的环境受代理/防火墙限制，依赖安装可能失败（`pip`/`npm` 403），需切换可访问镜像源后再执行。
+
+
+## 9. 前端安全依赖说明
+
+- `next` 已固定到 `15.5.15`（修复 `npm audit` 报告中的多个 Next.js 高危问题）。
+- 使用 `overrides` 将 `dompurify` 固定到 `3.3.2`，规避 `monaco-editor` 传递依赖中的已知漏洞。
+
+升级后请在 `frontend/` 目录执行：
+
+```bash
+npm install
+npm audit
+```
